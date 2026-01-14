@@ -4,8 +4,8 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  // 화살표 버튼 - 꾹 누르기 처리
-  const handleArrowTouchStart = useCallback(
+  // 아래 버튼 - 꾹 누르기 처리
+  const handleDownTouchStart = useCallback(
     (e, callback) => {
       if (disabled) return;
 
@@ -17,14 +17,14 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
       timeoutRef.current = setTimeout(() => {
         intervalRef.current = setInterval(() => {
           callback();
-        }, 200); // 0.2초마다 반복
+        }, 100); // 0.2초마다 반복
       }, 500); // 첫 번째 실행 후 0.5초 대기
     },
     [disabled]
   );
 
-  // 회전 버튼 - 한 번만 실행
-  const handleRotateTouchStart = useCallback(
+  // 회전, 좌우 버튼 - 한 번만 실행
+  const handleSingleTouchStart = useCallback(
     (e, callback) => {
       if (disabled) return;
       e.preventDefault();
@@ -55,7 +55,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
       <div className="controls-row">
         <button
           className="control-btn rotate-btn"
-          onTouchStart={(e) => handleRotateTouchStart(e, onRotate)}
+          onTouchStart={(e) => handleSingleTouchStart(e, onRotate)}
           disabled={disabled}
           aria-label="회전"
         >
@@ -65,9 +65,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
       <div className="controls-row">
         <button
           className="control-btn"
-          onTouchStart={(e) => handleArrowTouchStart(e, onLeft)}
-          onTouchEnd={handleTouchEnd}
-          onTouchCancel={handleTouchEnd}
+          onTouchStart={(e) => handleSingleTouchStart(e, onLeft)}
           disabled={disabled}
           aria-label="왼쪽"
         >
@@ -75,7 +73,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
         </button>
         <button
           className="control-btn"
-          onTouchStart={(e) => handleArrowTouchStart(e, onDown)}
+          onTouchStart={(e) => handleDownTouchStart(e, onDown)}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
           disabled={disabled}
@@ -85,9 +83,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
         </button>
         <button
           className="control-btn"
-          onTouchStart={(e) => handleArrowTouchStart(e, onRight)}
-          onTouchEnd={handleTouchEnd}
-          onTouchCancel={handleTouchEnd}
+          onTouchStart={(e) => handleSingleTouchStart(e, onRight)}
           disabled={disabled}
           aria-label="오른쪽"
         >
