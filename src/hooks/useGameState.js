@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { getRandomTetromino, rotateTetromino } from '../utils/tetrominos';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { getRandomTetromino, rotateTetromino } from "../utils/tetrominos";
 import {
   createEmptyBoard,
   checkCollision,
@@ -7,8 +7,8 @@ import {
   clearLines,
   calculateScore,
   isGameOver,
-  BOARD_WIDTH
-} from '../utils/gameLogic';
+  BOARD_WIDTH,
+} from "../utils/gameLogic";
 
 const INITIAL_DROP_SPEED = 1000; // 1초
 const SPEED_INCREASE_PER_LEVEL = 100; // 레벨당 속도 증가
@@ -20,20 +20,32 @@ export const useGameState = () => {
   const [score, setScore] = useState(0);
   const [lines, setLines] = useState(0);
   const [level, setLevel] = useState(1);
-  const [gameStatus, setGameStatus] = useState('idle'); // idle, playing, paused, over
+  const [gameStatus, setGameStatus] = useState("idle"); // idle, playing, paused, over
   const [dropSpeed, setDropSpeed] = useState(INITIAL_DROP_SPEED);
 
   const dropIntervalRef = useRef(null);
+  const lastMoveTimeRef = useRef(0);
+
+  // 자동 낙하 타이머 리셋
+  const resetDropTimer = useCallback(() => {
+    if (dropIntervalRef.current) {
+      clearInterval(dropIntervalRef.current);
+      dropIntervalRef.current = null;
+    }
+    lastMoveTimeRef.current = Date.now();
+  }, []);
 
   // 새 테트로미노 생성
   const spawnTetromino = useCallback(() => {
     const newTetromino = getRandomTetromino();
-    const startX = Math.floor(BOARD_WIDTH / 2) - Math.floor(newTetromino.shape[0].length / 2);
+    const startX =
+      Math.floor(BOARD_WIDTH / 2) -
+      Math.floor(newTetromino.shape[0].length / 2);
     const startY = 0;
 
     // 게임 오버 체크
     if (checkCollision(board, newTetromino, { x: startX, y: startY })) {
-      setGameStatus('over');
+      setGameStatus("over");
       return;
     }
 
@@ -42,53 +54,78 @@ export const useGameState = () => {
   }, [board]);
 
   // 테트로미노 이동
-  const moveTetromino = useCallback((dx, dy) => {
-    if (!currentTetromino || gameStatus !== 'playing') return false;
+  const moveTetromino = useCallback(
+    (dx, dy, isManual = false) => {
+      if (!currentTetromino || gameStatus !== "playing") return false;
 
-    const newPosition = { x: position.x + dx, y: position.y + dy };
+      const newPosition = { x: position.x + dx, y: position.y + dy };
 
-    if (!checkCollision(board, currentTetromino, newPosition)) {
-      setPosition(newPosition);
-      return true;
-    }
+      if (!checkCollision(board, currentTetromino, newPosition)) {
+        setPosition(newPosition);
 
-    // 아래로 이동 시 충돌하면 블록 고정
-    if (dy > 0) {
-      const newBoard = mergeTetromino(board, currentTetromino, position);
-      const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard);
+        // 수동 아래 이동 시 자동 낙하 타이머 리셋
+        if (isManual && dy > 0) {
+          resetDropTimer();
+        }
 
-      setBoard(clearedBoard);
-      
-      if (linesCleared > 0) {
-        const points = calculateScore(linesCleared);
-        setScore(prev => prev + points);
-        setLines(prev => {
-          const newLines = prev + linesCleared;
-          const newLevel = Math.floor(newLines / 10) + 1;
-          if (newLevel !== level) {
-            setLevel(newLevel);
-            setDropSpeed(INITIAL_DROP_SPEED - (newLevel - 1) * SPEED_INCREASE_PER_LEVEL);
-          }
-          return newLines;
-        });
+        return true;
       }
 
-      // 게임 오버 체크
-      if (isGameOver(clearedBoard)) {
-        setGameStatus('over');
+      // 아래로 이동 시 충돌하면 블록 고정
+      if (dy > 0) {
+        const newBoard = mergeTetromino(board, currentTetromino, position);
+        const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard);
+
+        setBoard(clearedBoard);
+
+        if (linesCleared > 0) {
+          const points = calculateScore(linesCleared);
+          setScore((prev) => prev + points);
+          setLines((prev) => {
+            const newLines = prev + linesCleared;
+            const newLevel = Math.floor(newLines / 10) + 1;
+            if (newLevel !== level) {
+              setLevel(newLevel);
+              setDropSpeed(
+                INITIAL_DROP_SPEED - (newLevel - 1) * SPEED_INCREASE_PER_LEVEL
+              );
+            }
+            return newLines;
+          });
+        }
+
+        // 게임 오버 체크
+        if (isGameOver(clearedBoard)) {
+          setGameStatus("over");
+          return false;
+        }
+
+        spawnTetromino();
+
+        // 새 블록 생성 시 타이머 리셋
+        if (isManual) {
+          resetDropTimer();
+        }
+
         return false;
       }
 
-      spawnTetromino();
       return false;
-    }
-
-    return false;
-  }, [currentTetromino, position, board, gameStatus, level, spawnTetromino]);
+    },
+    [
+      currentTetromino,
+      position,
+      board,
+      gameStatus,
+      level,
+      spawnTetromino,
+      resetDropTimer,
+    ]
+  );
 
   // 테트로미노 회전
   const rotate = useCallback(() => {
-    if (!currentTetromino || gameStatus !== 'playing') return;
+    if (!currentTetromino || gameStatus !== "playing") return;
 
     const rotated = rotateTetromino(currentTetromino);
 
@@ -98,7 +135,7 @@ export const useGameState = () => {
       { x: -1, y: 0 },
       { x: 1, y: 0 },
       { x: -2, y: 0 },
-      { x: 2, y: 0 }
+      { x: 2, y: 0 },
     ];
 
     for (const kick of kicks) {
@@ -113,16 +150,18 @@ export const useGameState = () => {
 
   // 하드 드롭 (즉시 낙하)
   const hardDrop = useCallback(() => {
-    if (!currentTetromino || gameStatus !== 'playing') return;
+    if (!currentTetromino || gameStatus !== "playing") return;
 
     let newY = position.y;
-    while (!checkCollision(board, currentTetromino, { x: position.x, y: newY + 1 })) {
+    while (
+      !checkCollision(board, currentTetromino, { x: position.x, y: newY + 1 })
+    ) {
       newY++;
     }
 
     setPosition({ x: position.x, y: newY });
     // 다음 프레임에서 블록 고정
-    setTimeout(() => moveTetromino(0, 1), 0);
+    setTimeout(() => moveTetromino(0, 1, true), 0);
   }, [currentTetromino, position, board, gameStatus, moveTetromino]);
 
   // 게임 시작
@@ -132,41 +171,56 @@ export const useGameState = () => {
     setLines(0);
     setLevel(1);
     setDropSpeed(INITIAL_DROP_SPEED);
-    setGameStatus('playing');
-    
+    setGameStatus("playing");
+
     const newTetromino = getRandomTetromino();
-    const startX = Math.floor(BOARD_WIDTH / 2) - Math.floor(newTetromino.shape[0].length / 2);
+    const startX =
+      Math.floor(BOARD_WIDTH / 2) -
+      Math.floor(newTetromino.shape[0].length / 2);
     setCurrentTetromino(newTetromino);
     setPosition({ x: startX, y: 0 });
   }, []);
 
   // 게임 일시정지/재개
   const togglePause = useCallback(() => {
-    if (gameStatus === 'playing') {
-      setGameStatus('paused');
-    } else if (gameStatus === 'paused') {
-      setGameStatus('playing');
+    if (gameStatus === "playing") {
+      setGameStatus("paused");
+    } else if (gameStatus === "paused") {
+      setGameStatus("playing");
     }
   }, [gameStatus]);
 
   // 자동 낙하
   useEffect(() => {
-    if (gameStatus === 'playing' && currentTetromino) {
+    if (gameStatus === "playing" && currentTetromino) {
+      // 기존 타이머가 있으면 제거
+      if (dropIntervalRef.current) {
+        clearInterval(dropIntervalRef.current);
+      }
+
+      // 새 타이머 시작
       dropIntervalRef.current = setInterval(() => {
-        moveTetromino(0, 1);
+        moveTetromino(0, 1, false);
       }, dropSpeed);
 
       return () => {
         if (dropIntervalRef.current) {
           clearInterval(dropIntervalRef.current);
+          dropIntervalRef.current = null;
         }
       };
     }
-  }, [gameStatus, currentTetromino, moveTetromino, dropSpeed]);
+  }, [
+    gameStatus,
+    currentTetromino,
+    moveTetromino,
+    dropSpeed,
+    lastMoveTimeRef.current,
+  ]);
 
   // 렌더링을 위한 보드 생성 (고정된 블록만 포함)
   const displayBoard = useCallback(() => {
-    return board.map(row => [...row]);
+    return board.map((row) => [...row]);
   }, [board]);
 
   return {
@@ -181,6 +235,6 @@ export const useGameState = () => {
     rotate,
     hardDrop,
     startGame,
-    togglePause
+    togglePause,
   };
 };

@@ -32,15 +32,15 @@ function App() {
       switch (e.key) {
         case "ArrowLeft":
           e.preventDefault();
-          moveTetromino(-1, 0);
+          moveTetromino(-1, 0, false);
           break;
         case "ArrowRight":
           e.preventDefault();
-          moveTetromino(1, 0);
+          moveTetromino(1, 0, false);
           break;
         case "ArrowDown":
           e.preventDefault();
-          moveTetromino(0, 1);
+          moveTetromino(0, 1, true);
           break;
         case "ArrowUp":
           e.preventDefault();
@@ -60,9 +60,9 @@ function App() {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [gameStatus, moveTetromino, rotate, togglePause]);
 
-  const handleLeft = () => moveTetromino(-1, 0);
-  const handleRight = () => moveTetromino(1, 0);
-  const handleDown = () => moveTetromino(0, 1);
+  const handleLeft = () => moveTetromino(-1, 0, false);
+  const handleRight = () => moveTetromino(1, 0, false);
+  const handleDown = () => moveTetromino(0, 1, true);
 
   const isControlsDisabled = gameStatus !== "playing";
 

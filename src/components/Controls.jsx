@@ -2,16 +2,18 @@ import React, { useRef, useCallback } from 'react';
 
 const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
   const intervalRef = useRef(null);
-  const touchStartedRef = useRef(false);
+  const touchActiveRef = useRef(false);
+  const lastActionTimeRef = useRef(0);
 
   // 버튼 누르고 있을 때 반복 실행
   const handlePressStart = useCallback((e, callback, isRepeat = true) => {
     if (disabled) return;
     
-    // 터치 이벤트인 경우에만 preventDefault
+    // 터치 이벤트인 경우
     if (e.type.startsWith('touch')) {
       e.preventDefault();
-      touchStartedRef.current = true;
+      touchActiveRef.current = true;
+      lastActionTimeRef.current = Date.now();
     }
     
     callback(); // 즉시 한 번 실행
@@ -19,7 +21,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
     if (isRepeat) {
       intervalRef.current = setInterval(() => {
         callback();
-      }, 50); // 50ms마다 반복 (더 빠른 반응)
+      }, 50); // 50ms마다 반복
     }
   }, [disabled]);
 
@@ -28,20 +30,23 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-    // 짧은 딜레이 후 터치 플래그 리셋
+    // 터치 종료 후 300ms 동안 클릭 이벤트 차단
     setTimeout(() => {
-      touchStartedRef.current = false;
-    }, 100);
+      touchActiveRef.current = false;
+    }, 300);
   }, []);
 
   // 클릭 이벤트 핸들러 (터치가 아닌 경우에만)
   const handleClick = useCallback((e, callback) => {
     if (disabled) return;
-    // 터치로 시작된 경우 클릭 무시
-    if (touchStartedRef.current) {
+    
+    // 터치가 활성화되어 있거나 최근에 터치 이벤트가 발생한 경우 클릭 무시
+    const timeSinceLastAction = Date.now() - lastActionTimeRef.current;
+    if (touchActiveRef.current || timeSinceLastAction < 300) {
       e.preventDefault();
       return;
     }
+    
     callback();
   }, [disabled]);
 
