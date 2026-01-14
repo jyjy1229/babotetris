@@ -18,63 +18,78 @@ body {
 
 .app {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
   padding: 0;
+  overflow: hidden;
 }
 
-/* 상단 바 */
-.top-bar {
+/* 게임 레이아웃 */
+.game-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.game-title-small {
-  font-size: 2rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  white-space: nowrap;
-}
-
-.top-stats {
-  display: flex;
+  width: 100%;
+  height: 100vh;
   gap: 30px;
-  flex: 1;
+  padding: 20px;
+  align-items: center;
   justify-content: center;
 }
 
-.top-stat {
+/* 사이드 바 */
+.side-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 25px;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  align-self: center;
+}
+
+.side-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.side-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.side-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 10px;
   gap: 5px;
 }
 
-.top-stat-label {
+.side-stat-label {
   font-size: 0.9rem;
   opacity: 0.9;
 }
 
-.top-stat-value {
-  font-size: 1.8rem;
+.side-stat-value {
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
-.game-buttons {
+.side-buttons {
   display: flex;
+  flex-direction: column;
   gap: 15px;
-  align-items: center;
+  align-items: stretch;
 }
 
-.game-btn-small {
-  padding: 10px 25px;
+.side-btn {
+  padding: 15px 20px;
   font-size: 1rem;
   font-weight: bold;
   border: none;
@@ -84,41 +99,44 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  white-space: nowrap;
 }
 
-.game-btn-small.start-btn, .game-btn-small.restart-btn {
+.side-btn.start-btn, .side-btn.restart-btn {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
-.game-btn-small.pause-btn, .game-btn-small.resume-btn {
+.side-btn.pause-btn, .side-btn.resume-btn {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   color: white;
 }
 
-.game-btn-small:hover {
+.side-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-.game-btn-small:active {
+.side-btn:active {
   transform: translateY(0);
 }
 
-.game-over-small {
+.pause-text-side, .game-over-text-side {
   font-size: 1.2rem;
   font-weight: bold;
+  text-align: center;
+}
+
+.game-over-text-side {
   color: #ff6b6b;
 }
 
-/* 메인 컨텐츠 */
-.main-content {
-  flex: 1;
+/* 게임 영역 */
+.game-area {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
   align-items: center;
-  padding: 20px 20px 10px;
+  justify-content: center;
 }
 
 
@@ -177,7 +195,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  margin: 20px auto 40px;
+  border-radius: 15px;
 }
 
 .controls-row {
@@ -225,48 +243,75 @@ body {
 
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
-  .top-bar {
-    padding: 15px 20px;
+  .game-layout {
+    flex-direction: column;
+    padding: 15px;
+    gap: 20px;
   }
 
-  .game-title-small {
+  .side-bar {
+    width: 100%;
+    max-width: 400px;
+    min-width: unset;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+  }
+
+  .side-title {
+    font-size: 1.5rem;
+    flex: 1 1 100%;
+  }
+
+  .side-stats {
+    flex-direction: row;
+    gap: 15px;
+    flex: 1;
+  }
+
+  .side-stat {
+    flex: 1;
+    padding: 10px;
+  }
+
+  .side-stat-value {
     font-size: 1.5rem;
   }
 
-  .top-stat-value {
-    font-size: 1.5rem;
+  .side-buttons {
+    flex-direction: row;
+    flex: 1 1 100%;
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 768px) {
-  .top-bar {
-    padding: 10px 15px;
-    gap: 10px;
-  }
-
-  .game-title-small {
-    font-size: 1.3rem;
-  }
-
-  .top-stats {
+  .game-layout {
+    padding: 10px;
     gap: 15px;
   }
 
-  .top-stat-label {
-    font-size: 0.8rem;
+  .side-bar {
+    padding: 15px;
+    gap: 15px;
   }
 
-  .top-stat-value {
+  .side-title {
     font-size: 1.3rem;
   }
 
-  .game-btn-small {
-    padding: 8px 15px;
-    font-size: 0.9rem;
+  .side-stat-label {
+    font-size: 0.8rem;
   }
 
-  .main-content {
-    padding: 10px;
+  .side-stat-value {
+    font-size: 1.3rem;
+  }
+
+  .side-btn {
+    padding: 10px 15px;
+    font-size: 0.9rem;
   }
 
   .cell {
@@ -280,42 +325,44 @@ body {
     font-size: 1.5rem;
   }
 
-  .rotate-btn, .hard-drop-btn {
+  .rotate-btn {
     width: 130px;
   }
 }
 
 @media (max-width: 480px) {
-  .top-bar {
-    flex-direction: column;
+  .game-layout {
+    padding: 5px;
+    gap: 10px;
+  }
+
+  .side-bar {
     padding: 10px;
     gap: 10px;
   }
 
-  .game-title-small {
-    font-size: 1.2rem;
-  }
-
-  .top-stats {
-    gap: 20px;
-    width: 100%;
-  }
-
-  .top-stat-label {
-    font-size: 0.75rem;
-  }
-
-  .top-stat-value {
+  .side-title {
     font-size: 1.1rem;
   }
 
-  .game-buttons {
-    width: 100%;
-    justify-content: center;
+  .side-stats {
+    gap: 10px;
   }
 
-  .game-btn-small {
-    padding: 8px 12px;
+  .side-stat {
+    padding: 8px;
+  }
+
+  .side-stat-label {
+    font-size: 0.75rem;
+  }
+
+  .side-stat-value {
+    font-size: 1.1rem;
+  }
+
+  .side-btn {
+    padding: 8px 10px;
     font-size: 0.85rem;
   }
 
@@ -330,46 +377,60 @@ body {
     font-size: 1.3rem;
   }
 
-  .rotate-btn, .hard-drop-btn {
+  .rotate-btn {
     width: 120px;
     font-size: 1rem;
   }
 
   .controls {
-    padding: 15px;
+    padding: 12px;
     max-width: 100%;
   }
 }
 
 /* 가로 모드 최적화 (모바일) */
 @media (max-width: 768px) and (orientation: landscape) {
-  .top-bar {
-    padding: 8px 15px;
+  .game-layout {
+    flex-direction: row;
+    gap: 15px;
+    padding: 10px;
   }
 
-  .game-title-small {
-    font-size: 1.1rem;
-  }
-
-  .top-stats {
+  .side-bar {
+    flex-direction: column;
+    max-width: 180px;
+    padding: 15px;
     gap: 15px;
   }
 
-  .top-stat-label {
+  .side-title {
+    font-size: 1.1rem;
+  }
+
+  .side-stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .side-stat {
+    padding: 8px;
+  }
+
+  .side-stat-label {
     font-size: 0.7rem;
   }
 
-  .top-stat-value {
-    font-size: 1rem;
+  .side-stat-value {
+    font-size: 1.2rem;
   }
 
-  .game-btn-small {
-    padding: 6px 12px;
+  .side-buttons {
+    flex-direction: column;
+  }
+
+  .side-btn {
+    padding: 8px 12px;
     font-size: 0.8rem;
-  }
-
-  .main-content {
-    padding: 10px;
   }
 
   .cell {
@@ -380,7 +441,6 @@ body {
   .controls {
     padding: 10px;
     gap: 10px;
-    margin-bottom: 10px;
   }
 
   .control-btn {
@@ -389,7 +449,7 @@ body {
     font-size: 1.2rem;
   }
 
-  .rotate-btn, .hard-drop-btn {
+  .rotate-btn {
     width: 100px;
     font-size: 0.9rem;
   }
