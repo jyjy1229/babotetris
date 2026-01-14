@@ -4,23 +4,31 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
   const intervalRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  // 터치 시작 - 꾹 누르기 처리
-  const handleTouchStart = useCallback(
-    (e, callback, isRepeat = true) => {
+  // 화살표 버튼 - 꾹 누르기 처리
+  const handleArrowTouchStart = useCallback(
+    (e, callback) => {
       if (disabled) return;
 
       e.preventDefault();
 
       callback(); // 즉시 첫 번째 실행
 
-      if (isRepeat) {
-        // 0.5초 후에 연타 시작
-        timeoutRef.current = setTimeout(() => {
-          intervalRef.current = setInterval(() => {
-            callback();
-          }, 200); // 0.2초마다 반복
-        }, 500); // 첫 번째 실행 후 0.5초 대기
-      }
+      // 0.5초 후에 연타 시작
+      timeoutRef.current = setTimeout(() => {
+        intervalRef.current = setInterval(() => {
+          callback();
+        }, 200); // 0.2초마다 반복
+      }, 500); // 첫 번째 실행 후 0.5초 대기
+    },
+    [disabled]
+  );
+
+  // 회전 버튼 - 한 번만 실행
+  const handleRotateTouchStart = useCallback(
+    (e, callback) => {
+      if (disabled) return;
+      e.preventDefault();
+      callback();
     },
     [disabled]
   );
@@ -47,9 +55,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
       <div className="controls-row">
         <button
           className="control-btn rotate-btn"
-          onTouchStart={(e) => handleTouchStart(e, onRotate, false)}
-          onTouchEnd={handleTouchEnd}
-          onTouchCancel={handleTouchEnd}
+          onTouchStart={(e) => handleRotateTouchStart(e, onRotate)}
           disabled={disabled}
           aria-label="회전"
         >
@@ -59,7 +65,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
       <div className="controls-row">
         <button
           className="control-btn"
-          onTouchStart={(e) => handleTouchStart(e, onLeft, true)}
+          onTouchStart={(e) => handleArrowTouchStart(e, onLeft)}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
           disabled={disabled}
@@ -69,7 +75,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
         </button>
         <button
           className="control-btn"
-          onTouchStart={(e) => handleTouchStart(e, onDown, true)}
+          onTouchStart={(e) => handleArrowTouchStart(e, onDown)}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
           disabled={disabled}
@@ -79,7 +85,7 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
         </button>
         <button
           className="control-btn"
-          onTouchStart={(e) => handleTouchStart(e, onRight, true)}
+          onTouchStart={(e) => handleArrowTouchStart(e, onRight)}
           onTouchEnd={handleTouchEnd}
           onTouchCancel={handleTouchEnd}
           disabled={disabled}

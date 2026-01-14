@@ -25,6 +25,7 @@ export const useGameState = () => {
 
   const dropIntervalRef = useRef(null);
   const moveTetrominoRef = useRef(null);
+  const positionRef = useRef({ x: 0, y: 0 });
   const [dropTrigger, setDropTrigger] = useState(0);
 
   // 자동 낙하 타이머 리셋
@@ -46,8 +47,10 @@ export const useGameState = () => {
       return;
     }
 
+    const newPosition = { x: startX, y: startY };
     setCurrentTetromino(newTetromino);
-    setPosition({ x: startX, y: startY });
+    setPosition(newPosition);
+    positionRef.current = newPosition; // ref 업데이트
   }, [board]);
 
   // 테트로미노 이동
@@ -55,22 +58,33 @@ export const useGameState = () => {
     (dx, dy, isManual = false) => {
       if (!currentTetromino || gameStatus !== "playing") return false;
 
-      const newPosition = { x: position.x + dx, y: position.y + dy };
+      let moved = false;
+      let currentPos = null;
 
-      if (!checkCollision(board, currentTetromino, newPosition)) {
-        setPosition(newPosition);
+      setPosition((prevPosition) => {
+        currentPos = prevPosition;
+        const newPosition = { x: prevPosition.x + dx, y: prevPosition.y + dy };
 
+        if (!checkCollision(board, currentTetromino, newPosition)) {
+          moved = true;
+          positionRef.current = newPosition; // ref 업데이트
+          return newPosition;
+        }
+
+        return prevPosition;
+      });
+
+      if (moved) {
         // 수동 아래 이동 시 자동 낙하 타이머 리셋
         if (isManual && dy > 0) {
           resetDropTimer();
         }
-
         return true;
       }
 
       // 아래로 이동 시 충돌하면 블록 고정
-      if (dy > 0) {
-        const newBoard = mergeTetromino(board, currentTetromino, position);
+      if (dy > 0 && currentPos) {
+        const newBoard = mergeTetromino(board, currentTetromino, currentPos);
         const { newBoard: clearedBoard, linesCleared } = clearLines(newBoard);
 
         setBoard(clearedBoard);
@@ -109,15 +123,7 @@ export const useGameState = () => {
 
       return false;
     },
-    [
-      currentTetromino,
-      position,
-      board,
-      gameStatus,
-      level,
-      spawnTetromino,
-      resetDropTimer,
-    ]
+    [currentTetromino, board, gameStatus, level, spawnTetromino, resetDropTimer]
   );
 
   // ref에 최신 moveTetromino 저장
@@ -128,6 +134,7 @@ export const useGameState = () => {
     if (!currentTetromino || gameStatus !== "playing") return;
 
     const rotated = rotateTetromino(currentTetromino);
+    const currentPos = positionRef.current;
 
     // 회전 후 벽 킥 시도
     const kicks = [
@@ -139,30 +146,37 @@ export const useGameState = () => {
     ];
 
     for (const kick of kicks) {
-      const newPosition = { x: position.x + kick.x, y: position.y + kick.y };
+      const newPosition = {
+        x: currentPos.x + kick.x,
+        y: currentPos.y + kick.y,
+      };
       if (!checkCollision(board, rotated, newPosition)) {
         setCurrentTetromino(rotated);
         setPosition(newPosition);
+        positionRef.current = newPosition; // ref 업데이트
         return;
       }
     }
-  }, [currentTetromino, position, board, gameStatus]);
+  }, [currentTetromino, board, gameStatus]);
 
   // 하드 드롭 (즉시 낙하)
   const hardDrop = useCallback(() => {
     if (!currentTetromino || gameStatus !== "playing") return;
 
-    let newY = position.y;
+    const currentPos = positionRef.current;
+    let newY = currentPos.y;
     while (
-      !checkCollision(board, currentTetromino, { x: position.x, y: newY + 1 })
+      !checkCollision(board, currentTetromino, { x: currentPos.x, y: newY + 1 })
     ) {
       newY++;
     }
 
-    setPosition({ x: position.x, y: newY });
+    const newPosition = { x: currentPos.x, y: newY };
+    setPosition(newPosition);
+    positionRef.current = newPosition; // ref 업데이트
     // 다음 프레임에서 블록 고정
     setTimeout(() => moveTetromino(0, 1, true), 0);
-  }, [currentTetromino, position, board, gameStatus, moveTetromino]);
+  }, [currentTetromino, board, gameStatus, moveTetromino]);
 
   // 게임 시작
   const startGame = useCallback(() => {
@@ -177,8 +191,10 @@ export const useGameState = () => {
     const startX =
       Math.floor(BOARD_WIDTH / 2) -
       Math.floor(newTetromino.shape[0].length / 2);
+    const newPosition = { x: startX, y: 0 };
     setCurrentTetromino(newTetromino);
-    setPosition({ x: startX, y: 0 });
+    setPosition(newPosition);
+    positionRef.current = newPosition; // ref 업데이트
   }, []);
 
   // 게임 일시정지/재개
