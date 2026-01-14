@@ -1,9 +1,33 @@
 import React from "react";
 
-const SideBar = ({ score, lines, level, gameStatus, onStart, onPause }) => {
+const SideBar = ({ score, lines, level, gameStatus, nextTetromino, onStart, onPause }) => {
   return (
     <div className="side-bar">
       <div className="side-title">바보 테트리스</div>
+
+      {/* 다음 블록 표시 */}
+      {nextTetromino && (
+        <div className="next-tetromino-container">
+          <div className="next-tetromino-label">다음 블록</div>
+          <div className="next-tetromino-preview">
+            {nextTetromino.shape.map((row, rowIdx) => (
+              <div key={rowIdx} className="next-tetromino-row">
+                {row.map((cell, cellIdx) => (
+                  <div
+                    key={cellIdx}
+                    className={`next-tetromino-cell ${cell ? "filled" : "empty"}`}
+                    style={{
+                      backgroundImage: cell && nextTetromino.image 
+                        ? `url(${nextTetromino.image})` 
+                        : "none",
+                    }}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="side-stats">
         <div className="side-stat">

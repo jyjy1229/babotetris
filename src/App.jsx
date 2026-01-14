@@ -8,6 +8,7 @@ function App() {
   const {
     board,
     currentTetromino,
+    nextTetromino,
     position,
     score,
     lines,
@@ -74,6 +75,7 @@ function App() {
           lines={lines}
           level={level}
           gameStatus={gameStatus}
+          nextTetromino={nextTetromino}
           onStart={startGame}
           onPause={togglePause}
         />

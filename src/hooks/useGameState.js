@@ -16,6 +16,7 @@ const SPEED_INCREASE_PER_LEVEL = 100; // 레벨당 속도 증가
 export const useGameState = () => {
   const [board, setBoard] = useState(createEmptyBoard());
   const [currentTetromino, setCurrentTetromino] = useState(null);
+  const [nextTetromino, setNextTetromino] = useState(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [score, setScore] = useState(0);
   const [lines, setLines] = useState(0);
@@ -35,22 +36,27 @@ export const useGameState = () => {
 
   // 새 테트로미노 생성
   const spawnTetromino = useCallback(() => {
-    const newTetromino = getRandomTetromino();
-    const startX =
-      Math.floor(BOARD_WIDTH / 2) -
-      Math.floor(newTetromino.shape[0].length / 2);
-    const startY = 0;
+    setNextTetromino((prevNext) => {
+      const newTetromino = prevNext || getRandomTetromino();
+      const startX =
+        Math.floor(BOARD_WIDTH / 2) -
+        Math.floor(newTetromino.shape[0].length / 2);
+      const startY = 0;
 
-    // 게임 오버 체크
-    if (checkCollision(board, newTetromino, { x: startX, y: startY })) {
-      setGameStatus("over");
-      return;
-    }
+      // 게임 오버 체크
+      if (checkCollision(board, newTetromino, { x: startX, y: startY })) {
+        setGameStatus("over");
+        return prevNext;
+      }
 
-    const newPosition = { x: startX, y: startY };
-    setCurrentTetromino(newTetromino);
-    setPosition(newPosition);
-    positionRef.current = newPosition; // ref 업데이트
+      const newPosition = { x: startX, y: startY };
+      setCurrentTetromino(newTetromino);
+      setPosition(newPosition);
+      positionRef.current = newPosition; // ref 업데이트
+      
+      // 새로운 다음 블록 생성
+      return getRandomTetromino();
+    });
   }, [board]);
 
   // 테트로미노 이동
@@ -193,6 +199,7 @@ export const useGameState = () => {
       Math.floor(newTetromino.shape[0].length / 2);
     const newPosition = { x: startX, y: 0 };
     setCurrentTetromino(newTetromino);
+    setNextTetromino(getRandomTetromino());
     setPosition(newPosition);
     positionRef.current = newPosition; // ref 업데이트
   }, []);
@@ -238,6 +245,7 @@ export const useGameState = () => {
   return {
     board: displayBoard(),
     currentTetromino,
+    nextTetromino,
     position,
     score,
     lines,
