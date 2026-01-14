@@ -11,24 +11,75 @@ React로 제작된 웹 테트리스 게임입니다. 데스크톱과 모바일 �
 - 키보드 및 터치 컨트롤 지원
 - 반응형 디자인
 - **커스텀 블록 이미지 지원** 🎨
+- **온라인 랭킹 시스템** 🏆
+- 게임오버 시 점수 등록
+- 리더보드 페이지
 
 ## 설치 및 실행
 
-### 의존성 설치
+### 1. 의존성 설치
 
 ```bash
 npm install
 ```
 
-### 개발 서버 실행
+### 2. Supabase 설정 (랭킹 시스템 사용 시)
+
+#### 2.1 Supabase 프로젝트 생성
+
+1. [Supabase](https://supabase.com)에 가입하고 새 프로젝트를 생성하세요
+2. 프로젝트 설정에서 **API URL**과 **anon public key**를 확인하세요
+
+#### 2.2 데이터베이스 테이블 생성
+
+Supabase SQL Editor에서 다음 쿼리를 실행하세요:
+
+```sql
+-- 리더보드 테이블 생성
+CREATE TABLE leaderboard (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  player_name TEXT NOT NULL,
+  score INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 점수 내림차순 인덱스 생성 (성능 향상)
+CREATE INDEX idx_leaderboard_score ON leaderboard(score DESC);
+
+-- RLS (Row Level Security) 활성화
+ALTER TABLE leaderboard ENABLE ROW LEVEL SECURITY;
+
+-- 모든 사용자가 읽을 수 있도록 설정
+CREATE POLICY "Anyone can read leaderboard"
+ON leaderboard FOR SELECT
+USING (true);
+
+-- 모든 사용자가 점수를 등록할 수 있도록 설정
+CREATE POLICY "Anyone can insert scores"
+ON leaderboard FOR INSERT
+WITH CHECK (true);
+```
+
+#### 2.3 환경 변수 설정
+
+프로젝트 루트에 `.env` 파일을 생성하고 다음 내용을 입력하세요:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+**주의**: `.env` 파일은 Git에 커밋되지 않습니다. 실제 값을 입력해야 합니다.
+
+### 3. 개발 서버 실행
 
 ```bash
 npm run dev
 ```
 
-브라우저에서 자동으로 http://localhost:3000 이 열립니다.
+브라우저에서 자동으로 http://localhost:5173 이 열립니다.
 
-### 빌드
+### 4. 빌드
 
 ```bash
 npm run build
@@ -64,6 +115,8 @@ npm run build
 
 - React 18
 - Vite
+- React Router DOM 6
+- Supabase (Backend & Database)
 - CSS3
 
 ## 커스텀 블록 이미지 추가 🎨
@@ -93,10 +146,12 @@ npm run build
 각 블록 타입의 모든 셀에 같은 이미지가 타일처럼 반복됩니다.
 
 예시: T 블록에 고양이 이미지를 넣으면
+
 ```
    [🐱]
 [🐱][🐱][🐱]
 ```
+
 이런 식으로 각 셀마다 고양이가 표시됩니다!
 
 ### 이미지 준비 팁

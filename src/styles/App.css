@@ -48,11 +48,43 @@ body {
   align-self: center;
 }
 
+.side-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
 .side-title {
   font-size: 2rem;
   font-weight: bold;
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard-link-btn {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  border-radius: 8px;
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.leaderboard-link-btn:hover {
+  background: rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+}
+
+.leaderboard-link-btn:active {
+  transform: translateY(0);
 }
 
 /* 다음 블록 표시 */

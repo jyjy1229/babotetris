@@ -1,9 +1,21 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const SideBar = ({ score, lines, level, gameStatus, nextTetromino, onStart, onPause }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="side-bar">
-      <div className="side-title">바보 테트리스</div>
+      <div className="side-header">
+        <div className="side-title">바보 테트리스</div>
+        <button 
+          className="leaderboard-link-btn" 
+          onClick={() => navigate("/leaderboard")}
+          title="랭킹 보기"
+        >
+          🏆 랭킹
+        </button>
+      </div>
 
       {/* 다음 블록 표시 */}
       {nextTetromino && (
