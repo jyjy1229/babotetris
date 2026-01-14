@@ -2,6 +2,7 @@ import React, { useRef, useCallback } from "react";
 
 const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
   const intervalRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   // 터치 시작 - 꾹 누르기 처리
   const handleTouchStart = useCallback(
@@ -10,13 +11,15 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
 
       e.preventDefault();
 
-      callback(); // 즉시 한 번 실행
+      callback(); // 즉시 첫 번째 실행
 
       if (isRepeat) {
-        // 화살표 버튼은 0.2초마다 반복
-        intervalRef.current = setInterval(() => {
-          callback();
-        }, 200);
+        // 0.5초 후에 연타 시작
+        timeoutRef.current = setTimeout(() => {
+          intervalRef.current = setInterval(() => {
+            callback();
+          }, 200); // 0.2초마다 반복
+        }, 500); // 첫 번째 실행 후 0.5초 대기
       }
     },
     [disabled]
@@ -25,6 +28,14 @@ const Controls = ({ onLeft, onRight, onRotate, onDown, disabled }) => {
   // 터치 종료
   const handleTouchEnd = useCallback((e) => {
     e.preventDefault();
+
+    // 대기 중인 timeout 취소
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    // 진행 중인 interval 취소
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
