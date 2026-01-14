@@ -332,8 +332,8 @@ body {
 @media (max-width: 1024px) {
   .game-layout {
     flex-direction: column;
-    padding: 15px;
-    gap: 20px;
+    padding: 10px;
+    gap: 10px;
   }
 
   .side-bar {
@@ -344,111 +344,143 @@ body {
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
-    gap: 15px;
+    padding: 8px 12px;
+    gap: 8px;
+    border-radius: 12px;
+  }
+
+  .side-header {
+    flex-direction: row;
+    gap: 6px;
+    flex: 0 0 auto;
   }
 
   .side-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     flex: 0 0 auto;
     margin: 0;
   }
 
+  .leaderboard-link-btn {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
   .side-stats {
     flex-direction: row;
-    gap: 10px;
+    gap: 6px;
     flex: 1;
     justify-content: center;
   }
 
   .side-stat {
     flex: 0 1 auto;
-    padding: 6px 12px;
-    min-width: 60px;
+    padding: 4px 8px;
+    min-width: 50px;
+    border-radius: 6px;
   }
 
   .side-stat-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
 
   .side-stat-value {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .side-buttons {
     flex-direction: row;
     flex: 0 0 auto;
     margin-top: 0;
-    gap: 10px;
+    gap: 6px;
   }
 
   .side-btn {
-    padding: 8px 15px;
-    font-size: 0.85rem;
+    padding: 6px 10px;
+    font-size: 0.75rem;
     white-space: nowrap;
+    border-radius: 6px;
   }
 
   .pause-text-side, .game-over-text-side {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     white-space: nowrap;
   }
 
   .next-tetromino-container {
-    padding: 10px;
-    gap: 8px;
+    padding: 6px;
+    gap: 4px;
+    border-radius: 6px;
   }
 
   .next-tetromino-label {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
   }
 
   .next-tetromino-preview {
-    min-width: 100px;
-    min-height: 100px;
-    padding: 6px;
+    min-width: 70px;
+    min-height: 70px;
+    padding: 4px;
   }
 
   .next-tetromino-cell {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
   }
 }
 
 @media (max-width: 768px) {
   .game-layout {
-    padding: 8px;
-    gap: 12px;
-  }
-
-  .side-bar {
-    padding: 10px 15px;
-    gap: 12px;
-  }
-
-  .side-title {
-    font-size: 1.2rem;
-  }
-
-  .side-stats {
+    padding: 6px;
     gap: 8px;
   }
 
+  .side-bar {
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .side-header {
+    gap: 4px;
+  }
+
+  .side-title {
+    font-size: 1rem;
+  }
+
+  .leaderboard-link-btn {
+    padding: 3px 6px;
+    font-size: 0.65rem;
+  }
+
+  .side-stats {
+    gap: 4px;
+  }
+
   .side-stat {
-    padding: 5px 10px;
-    min-width: 55px;
+    padding: 3px 6px;
+    min-width: 45px;
   }
 
   .side-stat-label {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
 
   .side-stat-value {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+  }
+
+  .side-buttons {
+    gap: 4px;
   }
 
   .side-btn {
-    padding: 7px 12px;
-    font-size: 0.8rem;
+    padding: 5px 8px;
+    font-size: 0.7rem;
+  }
+
+  .pause-text-side, .game-over-text-side {
+    font-size: 0.7rem;
   }
 
   .cell {
@@ -467,65 +499,82 @@ body {
   }
 
   .next-tetromino-container {
-    padding: 8px;
-    gap: 6px;
+    padding: 5px;
+    gap: 3px;
   }
 
   .next-tetromino-label {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
   }
 
   .next-tetromino-preview {
-    min-width: 90px;
-    min-height: 90px;
-    padding: 5px;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 3px;
   }
 
   .next-tetromino-cell {
-    width: 18px;
-    height: 18px;
+    width: 12px;
+    height: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .game-layout {
-    padding: 5px;
-    gap: 8px;
-  }
-
-  .side-bar {
-    padding: 8px 12px;
-    gap: 8px;
-  }
-
-  .side-title {
-    font-size: 1rem;
-  }
-
-  .side-stats {
+    padding: 4px;
     gap: 6px;
   }
 
+  .side-bar {
+    padding: 5px 8px;
+    gap: 5px;
+    border-radius: 8px;
+  }
+
+  .side-header {
+    gap: 3px;
+  }
+
+  .side-title {
+    font-size: 0.85rem;
+  }
+
+  .leaderboard-link-btn {
+    padding: 2px 5px;
+    font-size: 0.6rem;
+  }
+
+  .side-stats {
+    gap: 3px;
+  }
+
   .side-stat {
-    padding: 4px 8px;
-    min-width: 50px;
+    padding: 2px 5px;
+    min-width: 38px;
+    border-radius: 4px;
+    gap: 2px;
   }
 
   .side-stat-label {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
   }
 
   .side-stat-value {
-    font-size: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .side-buttons {
+    gap: 3px;
   }
 
   .side-btn {
-    padding: 6px 10px;
-    font-size: 0.75rem;
+    padding: 4px 7px;
+    font-size: 0.65rem;
+    border-radius: 5px;
   }
 
   .pause-text-side, .game-over-text-side {
-    font-size: 0.8rem;
+    font-size: 0.65rem;
   }
 
   .cell {
@@ -545,28 +594,97 @@ body {
   }
 
   .controls {
-    padding: 12px;
+    padding: 10px;
     max-width: 100%;
   }
 
   .next-tetromino-container {
-    padding: 6px;
-    gap: 5px;
+    padding: 4px;
+    gap: 2px;
+    border-radius: 4px;
   }
 
   .next-tetromino-label {
-    font-size: 0.75rem;
+    font-size: 0.6rem;
   }
 
   .next-tetromino-preview {
-    min-width: 80px;
-    min-height: 80px;
-    padding: 4px;
+    min-width: 52px;
+    min-height: 52px;
+    padding: 2px;
+    border-radius: 4px;
   }
 
   .next-tetromino-cell {
-    width: 16px;
-    height: 16px;
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* 매우 좁은 화면 */
+@media (max-width: 380px) {
+  .side-bar {
+    padding: 4px 6px;
+    gap: 4px;
+  }
+
+  .side-header {
+    gap: 2px;
+  }
+
+  .side-title {
+    font-size: 0.75rem;
+  }
+
+  .leaderboard-link-btn {
+    padding: 2px 4px;
+    font-size: 0.55rem;
+  }
+
+  .side-stat {
+    padding: 2px 4px;
+    min-width: 32px;
+  }
+
+  .side-stat-label {
+    font-size: 0.5rem;
+  }
+
+  .side-stat-value {
+    font-size: 0.7rem;
+  }
+
+  .side-btn {
+    padding: 3px 5px;
+    font-size: 0.6rem;
+  }
+
+  .pause-text-side, .game-over-text-side {
+    font-size: 0.6rem;
+  }
+
+  .next-tetromino-container {
+    padding: 3px;
+  }
+
+  .next-tetromino-label {
+    font-size: 0.55rem;
+  }
+
+  .next-tetromino-preview {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 2px;
+  }
+
+  .next-tetromino-cell {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cell {
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -574,45 +692,56 @@ body {
 @media (max-width: 768px) and (orientation: landscape) {
   .game-layout {
     flex-direction: row;
-    gap: 15px;
-    padding: 10px;
+    gap: 10px;
+    padding: 8px;
   }
 
   .side-bar {
     flex-direction: column;
-    max-width: 180px;
-    padding: 15px;
-    gap: 15px;
+    max-width: 150px;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .side-header {
+    flex-direction: column;
+    gap: 4px;
   }
 
   .side-title {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+  }
+
+  .leaderboard-link-btn {
+    padding: 3px 6px;
+    font-size: 0.6rem;
   }
 
   .side-stats {
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
   }
 
   .side-stat {
-    padding: 8px;
+    padding: 5px;
   }
 
   .side-stat-label {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
 
   .side-stat-value {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .side-buttons {
     flex-direction: column;
+    gap: 5px;
   }
 
   .side-btn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
+    padding: 6px 10px;
+    font-size: 0.7rem;
   }
 
   .cell {
@@ -621,8 +750,8 @@ body {
   }
 
   .controls {
-    padding: 10px;
-    gap: 10px;
+    padding: 8px;
+    gap: 8px;
   }
 
   .control-btn {
@@ -637,22 +766,23 @@ body {
   }
 
   .next-tetromino-container {
-    padding: 8px;
+    padding: 5px;
+    gap: 3px;
   }
 
   .next-tetromino-label {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
 
   .next-tetromino-preview {
-    min-width: 80px;
-    min-height: 80px;
-    padding: 5px;
+    min-width: 60px;
+    min-height: 60px;
+    padding: 3px;
   }
 
   .next-tetromino-cell {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 }
 
