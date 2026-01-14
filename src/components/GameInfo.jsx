@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const GameInfo = ({ score, lines, level, gameStatus, onStart, onPause }) => {
   return (
     <div className="game-info">
-      <h1 className="game-title">테트리스</h1>
-      
+      <h1 className="game-title">바보 테트리스</h1>
+
       <div className="stats">
         <div className="stat">
           <span className="stat-label">점수</span>
@@ -21,19 +21,19 @@ const GameInfo = ({ score, lines, level, gameStatus, onStart, onPause }) => {
       </div>
 
       <div className="game-controls">
-        {gameStatus === 'idle' && (
+        {gameStatus === "idle" && (
           <button className="game-btn start-btn" onClick={onStart}>
             게임 시작
           </button>
         )}
-        
-        {gameStatus === 'playing' && (
+
+        {gameStatus === "playing" && (
           <button className="game-btn pause-btn" onClick={onPause}>
             일시정지
           </button>
         )}
-        
-        {gameStatus === 'paused' && (
+
+        {gameStatus === "paused" && (
           <>
             <div className="pause-text">일시정지</div>
             <button className="game-btn resume-btn" onClick={onPause}>
@@ -41,8 +41,8 @@ const GameInfo = ({ score, lines, level, gameStatus, onStart, onPause }) => {
             </button>
           </>
         )}
-        
-        {gameStatus === 'over' && (
+
+        {gameStatus === "over" && (
           <>
             <div className="game-over-text">게임 오버!</div>
             <button className="game-btn restart-btn" onClick={onStart}>

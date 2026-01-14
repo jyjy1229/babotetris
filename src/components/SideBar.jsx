@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const SideBar = ({ score, lines, level, gameStatus, onStart, onPause }) => {
   return (
     <div className="side-bar">
-      <div className="side-title">테트리스</div>
-      
+      <div className="side-title">바보 테트리스</div>
+
       <div className="side-stats">
         <div className="side-stat">
           <span className="side-stat-label">점수</span>
@@ -21,19 +21,19 @@ const SideBar = ({ score, lines, level, gameStatus, onStart, onPause }) => {
       </div>
 
       <div className="side-buttons">
-        {gameStatus === 'idle' && (
+        {gameStatus === "idle" && (
           <button className="side-btn start-btn" onClick={onStart}>
             게임 시작
           </button>
         )}
-        
-        {gameStatus === 'playing' && (
+
+        {gameStatus === "playing" && (
           <button className="side-btn pause-btn" onClick={onPause}>
             일시정지
           </button>
         )}
-        
-        {gameStatus === 'paused' && (
+
+        {gameStatus === "paused" && (
           <>
             <div className="pause-text-side">일시정지</div>
             <button className="side-btn resume-btn" onClick={onPause}>
@@ -41,8 +41,8 @@ const SideBar = ({ score, lines, level, gameStatus, onStart, onPause }) => {
             </button>
           </>
         )}
-        
-        {gameStatus === 'over' && (
+
+        {gameStatus === "over" && (
           <>
             <div className="game-over-text-side">게임 오버!</div>
             <button className="side-btn restart-btn" onClick={onStart}>

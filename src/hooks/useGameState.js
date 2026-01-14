@@ -24,15 +24,11 @@ export const useGameState = () => {
   const [dropSpeed, setDropSpeed] = useState(INITIAL_DROP_SPEED);
 
   const dropIntervalRef = useRef(null);
-  const lastMoveTimeRef = useRef(0);
+  const [dropTrigger, setDropTrigger] = useState(0);
 
   // 자동 낙하 타이머 리셋
   const resetDropTimer = useCallback(() => {
-    if (dropIntervalRef.current) {
-      clearInterval(dropIntervalRef.current);
-      dropIntervalRef.current = null;
-    }
-    lastMoveTimeRef.current = Date.now();
+    setDropTrigger((prev) => prev + 1);
   }, []);
 
   // 새 테트로미노 생성
@@ -210,13 +206,7 @@ export const useGameState = () => {
         }
       };
     }
-  }, [
-    gameStatus,
-    currentTetromino,
-    moveTetromino,
-    dropSpeed,
-    lastMoveTimeRef.current,
-  ]);
+  }, [gameStatus, currentTetromino, moveTetromino, dropSpeed, dropTrigger]);
 
   // 렌더링을 위한 보드 생성 (고정된 블록만 포함)
   const displayBoard = useCallback(() => {
